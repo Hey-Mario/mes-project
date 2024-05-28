@@ -5,7 +5,7 @@ To run this project, you will need to add the following environment variables to
 
 `DATABASE_URL` = `CONNECTOR://USER:PASSWORD@HOST:PORT/DATABASE`
 
-or, alternatively, you can copy the content inside env.example and modify it based on your configutations
+or, alternatively, you can copy the content inside `env.example` and modify it based on your configutations
 
 ### Getting Started
 
@@ -46,6 +46,7 @@ Open [http://localhost:5555](http://localhost:5555) with your browser to see the
 
 ## Design Pattern
 - Creational Patterns
+
 **Singleton**: Assurer une unique instance des services centraux de gestion de la base de données et des configurations système. `src/lib/prisma.ts`
 
 ## Related
