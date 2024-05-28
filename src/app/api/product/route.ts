@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import Joi from 'joi';
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,20 +11,21 @@ export async function GET(req: NextRequest) {
   }
 }
 
-const productSchema = Joi.object({
-  name: Joi.string().required(),
-  description: Joi.string().optional()
+const createProductSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1).optional()
 });
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     console.log(data)
     
-    const { error } = productSchema.validate(data);
-    if (error) return NextResponse.json(error);
+    const validation = createProductSchema.safeParse(data);
+    if (!validation.success)
+      return NextResponse.json(validation.error.errors, { status: 422 });
 
     const product = await prisma.product.create({ data });
-    return NextResponse.json(product);
+    return NextResponse.json(product, { status : 201});
   } catch (error) {
     console.error(error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
