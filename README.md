@@ -29,6 +29,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
  npx prisma migrate dev --name "add column status on product table"
 ```
 
+- Format code in model
+
+```bash
+ npx prisma format
+```
+
 - Run existing migration
 
 ```bash

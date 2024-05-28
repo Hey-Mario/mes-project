@@ -15,24 +15,28 @@ model Order {
   quantity    Int
   status      String
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime? @updatedAt
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String?
-  orders      Order[]
-  inventory   Inventory?
+  id              Int              @id @default(autoincrement())
+  name            String
+  description     String?
+  orders          Order[]
+  inventory       Inventory?
   qualityControls QualityControl[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime?        @updatedAt
 }
 
 model Equipment {
-  id          Int       @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
   type        String
   status      String
   maintenance Maintenance[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?     @updatedAt
 }
 
 model Maintenance {
@@ -41,23 +45,29 @@ model Maintenance {
   equipmentId Int
   description String
   performedAt DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model Inventory {
-  id          Int       @id @default(autoincrement())
-  product     Product   @relation(fields: [productId], references: [id])
-  productId   Int       @unique
-  quantity    Int
-  location    String
+  id        Int       @id @default(autoincrement())
+  product   Product   @relation(fields: [productId], references: [id])
+  productId Int       @unique
+  quantity  Int
+  location  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model QualityControl {
-  id          Int       @id @default(autoincrement())
-  product     Product   @relation(fields: [productId], references: [id])
-  productId   Int
-  checkDate   DateTime  @default(now())
-  status      String
-  notes       String?
+  id        Int       @id @default(autoincrement())
+  product   Product   @relation(fields: [productId], references: [id])
+  productId Int
+  checkDate DateTime  @default(now())
+  status    String
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model ResourcePlanning {
@@ -65,4 +75,6 @@ model ResourcePlanning {
   resource    String
   quantity    Int
   plannedDate DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 }
