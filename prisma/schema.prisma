@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id          Int       @id @default(autoincrement())
+  orderNumber String    @unique
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   Int
+  quantity    Int
+  status      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  orders      Order[]
+  inventory   Inventory?
+  qualityControls QualityControl[]
+}
+
+model Equipment {
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        String
+  status      String
+  maintenance Maintenance[]
+}
+
+model Maintenance {
+  id          Int       @id @default(autoincrement())
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  equipmentId Int
+  description String
+  performedAt DateTime
+}
+
+model Inventory {
+  id          Int       @id @default(autoincrement())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   Int       @unique
+  quantity    Int
+  location    String
+}
+
+model QualityControl {
+  id          Int       @id @default(autoincrement())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   Int
+  checkDate   DateTime  @default(now())
+  status      String
+  notes       String?
+}
+
+model ResourcePlanning {
+  id          Int       @id @default(autoincrement())
+  resource    String
+  quantity    Int
+  plannedDate DateTime
+}
