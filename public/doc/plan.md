@@ -18,7 +18,13 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 ```
 
 2. **Builder**: Faciliter la création complexe de configurations de produits ou de plans de production.
-   - Create a `ProductBuilder` class to build product configurations.
+
+```js
+const productData = new ProductBuilder(data.name)
+                           .setDescription(data.description)
+                           .build();
+const product = await prisma.product.create({ data: productData });
+```
 
 3. **Prototype**: Utiliser pour cloner rapidement des configurations d'équipement ou des paramètres de processus.
    - Implement a `clone` method in your equipment or process parameter classes.
@@ -105,4 +111,5 @@ export async function POST(req: NextRequest) {
 
 ### Example Implementations
 - **Singleton**: `src/lib/prisma.ts`
+- **Builder**: `src/app/api/product/route.ts`
 - **Command**: `src/app/api/product/route.ts`
