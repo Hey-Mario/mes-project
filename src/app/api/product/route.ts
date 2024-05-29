@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { createProductSchema } from '../../../schema/product';
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,10 +11,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-const createProductSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1).optional()
-});
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();

@@ -1,13 +1,8 @@
 "use client";
 
 import AutoForm from '@/components/ui/auto-form'
+import { createProductSchema } from '@/schema/product';
 import React from 'react'
-import { z } from 'zod';
-
-const createProductSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1).optional()
-});
 
 const NewProductPage = () => {
 
