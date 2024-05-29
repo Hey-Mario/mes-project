@@ -5,7 +5,6 @@ import { createProductSchema } from '@/schema/product';
 import React from 'react'
 
 const NewProductPage = () => {
-
   return (
     <div>
       <AutoForm
