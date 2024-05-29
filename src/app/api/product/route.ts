@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { createProductSchema } from '../../../schema/product';
+import { ProductBuilder } from '@/builders/ProductBuilder';
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,7 +21,10 @@ export async function POST(req: NextRequest) {
     if (!validation.success)
       return NextResponse.json(validation.error.errors, { status: 422 });
 
-    const product = await prisma.product.create({ data });
+    const productData = new ProductBuilder(data.name)
+      .setDescription(data.description)
+      .build();
+    const product = await prisma.product.create({ data: productData });
     return NextResponse.json(product, { status : 201});
   } catch (error) {
     console.error(error)
