@@ -9,7 +9,16 @@ or, alternatively, you can copy the content inside `env.example` and modify it b
 
 ### Getting Started
 
-First, run the development server:
+First, install all the dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+The, run the development server:
 
 ```bash
 npm run dev
