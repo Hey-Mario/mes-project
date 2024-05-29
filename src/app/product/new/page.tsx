@@ -1,15 +1,46 @@
 "use client";
 
-import AutoForm from '@/components/ui/auto-form'
-import { createProductSchema } from '@/schema/product';
-import React from 'react'
+import { instance } from '@/common/axiosConfig';
+import AutoForm, { AutoFormSubmit } from '@/components/ui/auto-form'
+import { ProductForm, createProductSchema } from '@/schema/product';
+import { Spinner } from '@radix-ui/themes';
+import React, { useState } from 'react'
 
 const NewProductPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onSubmit = async (data: ProductForm) => {
+    setIsLoading(true);
+    console.log(data);
+    try {
+      const res = await instance.post('/api/product', data);
+      console.log(res);
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
-    <div>
+    <div className="md:w-1/2 w-[80%] mx-auto">
       <AutoForm
         formSchema={createProductSchema}
-      ></AutoForm>
+        onSubmit={onSubmit}
+        fieldConfig={{
+          description: {
+            fieldType: 'textarea'
+          }
+        }}
+      >
+        <AutoFormSubmit
+          disabled={isLoading}
+          className='m-auto flex gap-5'
+        >
+          <span>Save</span>
+          { isLoading && <Spinner className=''></Spinner> }
+        </AutoFormSubmit>
+      </AutoForm>
     </div>
   )
 }
