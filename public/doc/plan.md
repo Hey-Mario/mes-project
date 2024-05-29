@@ -60,7 +60,7 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
 2. **Command**: Encapsulate actions as objects for complex and schedulable operations.
    
-```14:29:src/app/api/product/route.ts
+```js
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
