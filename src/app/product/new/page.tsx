@@ -1,9 +1,14 @@
 "use client";
 
 import { instance } from '@/common/axiosConfig';
+import Center from '@/components/Center';
 import AutoForm, { AutoFormSubmit } from '@/components/ui/auto-form'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { ProductForm, createProductSchema } from '@/schema/product';
-import { Spinner } from '@radix-ui/themes';
+import { Heading, Spinner } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
@@ -26,25 +31,33 @@ const NewProductPage = () => {
   }
 
   return (
-    <div className="md:w-1/2 w-[80%] mx-auto">
-      <AutoForm
-        formSchema={createProductSchema}
-        onSubmit={onSubmit}
-        fieldConfig={{
-          description: {
-            fieldType: 'textarea'
-          }
-        }}
-      >
-        <AutoFormSubmit
-          disabled={isLoading}
-          className='m-auto flex gap-5'
-        >
-          <span>Save</span>
-          { isLoading && <Spinner className=''></Spinner> }
-        </AutoFormSubmit>
-      </AutoForm>
-    </div>
+    <Center className='md:w-[90%] w-[90%] max-w-[450px]'>
+      <Card>
+        <CardHeader>
+          <CardTitle>Create product</CardTitle>
+          <CardDescription>Create a new product in one-click.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AutoForm
+            formSchema={createProductSchema}
+            onSubmit={onSubmit}
+            fieldConfig={{
+              description: {
+                fieldType: 'textarea'
+              },
+            }}
+          >
+            <AutoFormSubmit
+              disabled={isLoading}
+              className='m-auto flex gap-5'
+            >
+              <span>Save</span>
+              { isLoading && <Spinner className=''></Spinner> }
+            </AutoFormSubmit>
+          </AutoForm>
+        </CardContent>
+      </Card>
+    </Center>
   )
 }
 
