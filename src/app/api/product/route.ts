@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { createProductSchema } from '../../../schema/product';
-import { ProductBuilder } from '@/builders/ProductBuilder';
+import { ProductBuilder } from '@/common/builders/ProductBuilder';
 
 export async function GET(req: NextRequest) {
   try {
