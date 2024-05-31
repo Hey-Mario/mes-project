@@ -5,4 +5,4 @@ export const createProductSchema = z.object({
   description: z.string().optional()
 });
 
-export type ProductForm = z.infer<typeof createProductSchema>;
+export type IProductForm = z.infer<typeof createProductSchema>;
