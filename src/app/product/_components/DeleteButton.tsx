@@ -2,6 +2,7 @@ import { instance } from '@/common/axiosConfig';
 import { useMutation } from '@tanstack/react-query';
 import React from 'react';
 import { FiTrash } from "react-icons/fi";
+import { message } from "antd";
 
 interface Props {
   productId: number;
@@ -9,15 +10,20 @@ interface Props {
 }
 
 const DeleteButton = ({ productId, onDeleteSuccess }: Props) => {
-  const mutation = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: () => instance.delete(`/api/product/${productId}`),
     onSuccess: () => {
       onDeleteSuccess?.(productId);
     },
   });
 
-  const onDelete = () => {
-    mutation.mutate();
+  const onDelete = async () => {
+    try {
+      await mutateAsync();
+      message.success('Product deleted successfully')
+    } catch {
+      message.error('Unabled to delete product')
+    }
   };
 
   return (
