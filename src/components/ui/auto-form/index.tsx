@@ -1,7 +1,7 @@
 "use client";
 import { Form } from "@/components/ui/form";
 import React from "react";
-import { DefaultValues, useForm } from "react-hook-form";
+import { DefaultValues, useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,7 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
   values: valuesProp,
   onValuesChange: onValuesChangeProp,
   onParsedValuesChange,
+  // onFormChange: onFormChangeProp,
   onSubmit: onSubmitProp,
   fieldConfig,
   children,
@@ -46,6 +47,7 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
   formSchema: SchemaType;
   values?: Partial<z.infer<SchemaType>>;
   onValuesChange?: (values: Partial<z.infer<SchemaType>>) => void;
+  // onFormChange?: (form: UseFormReturn) => void;
   onParsedValuesChange?: (values: Partial<z.infer<SchemaType>>) => void;
   onSubmit?: (values: z.infer<SchemaType>) => void;
   fieldConfig?: FieldConfig<z.infer<SchemaType>>;
@@ -80,6 +82,8 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
     if (parsedValues.success) {
       onParsedValuesChange?.(parsedValues.data);
     }
+    // onFormChangeProp?.(form);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valuesString]);
 
   return (

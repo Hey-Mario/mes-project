@@ -11,9 +11,11 @@ import { ProductForm, createProductSchema } from '@/schema/product';
 import { Heading, Spinner } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import { UseFormReturn } from 'react-hook-form';
 
 const NewProductPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isValid, setIsValid] = useState<boolean>(false);
   const router = useRouter();
 
   const onSubmit = async (data: ProductForm) => {
@@ -30,6 +32,11 @@ const NewProductPage = () => {
     }
   }
 
+  // const onFormChange = (event: UseFormReturn) => {
+  //   console.log(event.formState.isValid)
+  //   setIsValid(event.formState.isValid)
+  // }
+
   return (
     <Center className='md:w-[90%] w-[90%] max-w-[450px]'>
       <Card>
@@ -41,6 +48,7 @@ const NewProductPage = () => {
           <AutoForm
             formSchema={createProductSchema}
             onSubmit={onSubmit}
+            // onFormChange={onFormChange}
             fieldConfig={{
               description: {
                 fieldType: 'textarea'

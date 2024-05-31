@@ -8,6 +8,8 @@ import { Heading, Table } from '@radix-ui/themes'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import React from 'react'
+import DeleteButton from './_components/DeleteButton'
+import EditButton from './_components/EditButton'
 
 const ProductPage = () => {
   const { data, isLoading, error } = useQuery({
@@ -35,6 +37,7 @@ const ProductPage = () => {
             <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Creation Date</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Action</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -44,6 +47,12 @@ const ProductPage = () => {
               <Table.Cell>{product.name}</Table.Cell>
               <Table.Cell>{product.description}</Table.Cell>
               <Table.Cell>{(new Date(product.createdAt)).toLocaleString()}</Table.Cell>
+              <Table.Cell>
+                <div className='flex justify-around'>
+                  <DeleteButton productId={product.id} />
+                  <EditButton productId={product.id} />
+                </div>
+              </Table.Cell>
             </Table.Row>
           ))
         }
