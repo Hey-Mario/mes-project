@@ -8,7 +8,7 @@ interface Props extends PropsWithChildren {
 const Center = ({ className, children }: Props) => {
   return (
     <div className='flex h-screen items-center'>
-      <div className={cn('md:w-1/2 w-[80%] mx-auto', className)}>
+      <div className={cn('md:w-1/2 w-[80%] mx-auto text-center', className)}>
         {children}
       </div>
     </div>

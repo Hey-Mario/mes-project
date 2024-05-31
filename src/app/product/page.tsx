@@ -12,16 +12,24 @@ import DeleteButton from './_components/DeleteButton'
 import EditButton from './_components/EditButton'
 
 const ProductPage = () => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryFn: () => instance.get<Product[]>('/api/product'),
     queryKey: ['product']
   });
 
   if (isLoading)
-    return <div>Loading...</div>
+    return <Center>Loading...</Center>
 
   if (error)
     return <div>Error Occurred during fetch</div>
+
+  const handleDeleteSuccess = (productId: number) => {
+    // if (data) {
+    //   data.data = data.data.filter(product => product.id !== productId);
+    //   console.log(data.data)
+    // }
+    refetch();
+  };
 
   return (
     <Center>
@@ -49,7 +57,7 @@ const ProductPage = () => {
               <Table.Cell>{(new Date(product.createdAt)).toLocaleString()}</Table.Cell>
               <Table.Cell>
                 <div className='flex justify-around'>
-                  <DeleteButton productId={product.id} />
+                  <DeleteButton productId={product.id} onDeleteSuccess={handleDeleteSuccess} />
                   <EditButton productId={product.id} />
                 </div>
               </Table.Cell>
