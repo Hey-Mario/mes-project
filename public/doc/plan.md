@@ -64,21 +64,16 @@ const product = await prisma.product.create({ data: productData });
 2. **Command**: Encapsuler les actions comme des objets, permettant des opérations complexes et planifiables sur la production.
    
 ```js
-export async function POST(req: NextRequest) {
-  try {
-    const data = await req.json();
-    console.log(data)
-    
-    const validation = createProductSchema.safeParse(data);
-    if (!validation.success)
-      return NextResponse.json(validation.error.errors, { status: 422 });
+import { UpdateProductCommand } from "@/common/commands/product/UpdateProductCommand";
 
-    const product = await prisma.product.create({ data });
-    return NextResponse.json(product, { status : 201});
-  } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-  }
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const { id } = params;
+    const data = await req.json();
+
+    const updateProductCommand = new UpdateProductCommand(id, data);
+    const product = await updateProductCommand.execute();
+   ...
 }
 ```
 
@@ -112,4 +107,4 @@ export async function POST(req: NextRequest) {
 ### Example Implementations
 - **Singleton**: `src/lib/prisma.ts`
 - **Builder**: `src/app/api/product/route.ts`
-- **Command**: `src/app/api/product/route.ts`
+- **Command**: `src/app/api/product/[id]/route.ts`

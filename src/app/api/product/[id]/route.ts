@@ -1,5 +1,4 @@
 import { UpdateProductCommand } from "@/common/commands/product/UpdateProductCommand";
-import { IError } from "@/common/models/error";
 import { errorFormatter } from "@/common/utils";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";

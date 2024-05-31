@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/prisma';
 import { ICommand } from './../ICommand';
-import { toString } from '@/common/utils';
 
 export class UpdateProductCommand implements ICommand {
   private id: string;
