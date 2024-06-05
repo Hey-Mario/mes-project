@@ -27,13 +27,63 @@ const product = await prisma.product.create({ data: productData });
 ```
 
 3. **Prototype**: Utiliser pour cloner rapidement des configurations d'équipement ou des paramètres de processus.
-   - Implement a `clone` method in your equipment or process parameter classes.
+   
+```js
+   // Clone and update the equipment with new data
+    const clonedEquipment = new Equipment(
+      existingEquipment.name,
+      existingEquipment.type,
+      existingEquipment.status
+    ).clone();
+
+    // Update cloned equipment with new data
+    Object.assign(clonedEquipment, newData);
+
+    const createdEquipment = await prisma.equipment.create({
+      data: {
+        name: clonedEquipment.name,
+        type: clonedEquipment.type,
+        status: clonedEquipment.status,
+      },
+    });
+```
 
 4. **Factory Method**: Créer des instances de différents types de commandes de production ou de notifications sans exposer la logique de création au client.
-   - Define a factory interface and concrete factories for different order types.
+
+```js
+ async createOrder(status: string, details: any): Promise<Order> {
+    const order = await prisma.order.create({
+      data: {
+        orderNumber: details.orderNumber,
+        productId: details.productId,
+        quantity: details.quantity,
+        status: status,
+      },
+    });
+    return order;
+  }
+```
 
 5. **Abstract Factory**: Produire des familles d'objets relatifs, comme différents types de machines ou d'outils de production, sans spécifier leurs classes concrètes.
-   - Create an abstract factory for machine and tool creation.
+
+```js
+export class EquipmentFactory implements IEquipmentFactory {
+  async createEquipment(
+    name: string,
+    type: string = "Sport",
+    status: string = "Active"
+  ): Promise<Equipment> {
+    const equipment = await prisma.equipment.create({
+      data: {
+        name,
+        type,
+        status,
+      },
+    });
+    return equipment;
+  }
+}
+```
 
 ### Structural Patterns
 1. **Adapter**: Intégrer des machines de différents fabricants ou des systèmes ERP tiers qui n'utilisent pas une interface commune.
@@ -108,3 +158,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 - **Singleton**: `src/lib/prisma.ts`
 - **Builder**: `src/app/api/product/route.ts`
 - **Command**: `src/app/api/product/[id]/route.ts`
+- **Prototype**: `src/app/api/equipment/[id]/clone/route.ts`
+- **Factory Method**: `src/app/common/factories/OrderFactory.ts`
+- **Abstract Factory**: `src/app/common/factories/EquipmentFactory.ts`

@@ -5,7 +5,8 @@ export default function Home() {
   return (
     <>
       <Heading size="5">Hello World</Heading>
-      <Link href="/product">Product</Link>
+      <Link href="/product">Product</Link> <br />
+      <Link href="/equipment">Equipment</Link>
     </>
   )
 }

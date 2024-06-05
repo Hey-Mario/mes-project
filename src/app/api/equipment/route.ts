@@ -1,4 +1,5 @@
 import { EquipmentBuilder } from '@/common/builders/EquipmentBuilder';
+import { EquipmentFactory } from '@/common/factories/EquipmentFactory';
 import { prisma } from '@/lib/prisma';
 import { createEquipmentSchema } from '@/schema/equipment';
 import { NextRequest, NextResponse } from 'next/server';
@@ -21,12 +22,8 @@ export async function POST(req: NextRequest) {
     if (!validation.success)
       return NextResponse.json(validation.error.errors, { status: 422 });
 
-    const equipmentData = new EquipmentBuilder(
-      data.name,
-      data.type,
-      data.status
-    ).build();
-    const equipment = await prisma.equipment.create({ data: equipmentData });
+    const equipmentFactory = new EquipmentFactory();
+    const equipment = await equipmentFactory.createEquipment(data.name, data.type);
     return NextResponse.json(equipment, { status: 201 });
   } catch (error) {
     console.error(error);
