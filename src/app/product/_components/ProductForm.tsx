@@ -6,8 +6,12 @@ import { Spinner } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { instance } from '@/common/axiosConfig';
+import { Product } from '@prisma/client';
+import { useQueryClient } from '@tanstack/react-query';
 
-const ProductForm = () => {
+
+const ProductForm = ({ product = null }: { product?: Product | null }) => {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -15,8 +19,14 @@ const ProductForm = () => {
     setIsLoading(true);
     console.log(data);
     try {
-      const res = await instance.post('/api/product', data);
+      let res = null;
+      if (!product) {
+        res = await instance.post('/api/product', data);
+      } else {
+        res = await instance.patch('/api/product/'+product.id, data);
+      }
       console.log(res);
+      queryClient.invalidateQueries({ queryKey: ['product'] });
       router.push("/product")
     } catch (err) {
       console.error(err)
@@ -28,8 +38,8 @@ const ProductForm = () => {
   return (
     <Card>
       <CardHeader className='text-center'>
-        <CardTitle>Create product</CardTitle>
-        <CardDescription>Create a new product in one-click.</CardDescription>
+        <CardTitle>{product ? "Edit" : "Create"} product</CardTitle>
+        <CardDescription>{product ? "Edit" : "Create"} a product in one-click.</CardDescription>
       </CardHeader>
       <CardContent>
         <AutoForm
@@ -37,8 +47,12 @@ const ProductForm = () => {
           onSubmit={onSubmit}
           fieldConfig={{
             description: {
-              fieldType: 'textarea'
+              fieldType: 'textarea',
             },
+          }}
+          values={{
+            description: product?.description || '',
+            name: product?.name || '',
           }}
         >
           <AutoFormSubmit
