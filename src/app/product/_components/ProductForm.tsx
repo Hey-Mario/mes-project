@@ -7,8 +7,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { instance } from '@/common/axiosConfig';
 import { Product } from '@prisma/client';
+import { useQueryClient } from '@tanstack/react-query';
+
 
 const ProductForm = ({ product = null }: { product?: Product | null }) => {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -23,6 +26,7 @@ const ProductForm = ({ product = null }: { product?: Product | null }) => {
         res = await instance.patch('/api/product/'+product.id, data);
       }
       console.log(res);
+      queryClient.invalidateQueries({ queryKey: ['product'] });
       router.push("/product")
     } catch (err) {
       console.error(err)

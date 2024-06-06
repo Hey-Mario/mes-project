@@ -12,7 +12,7 @@ const EditProductPage = () => {
   const { id } = useParams();
   const { data, isLoading, error, refetch } = useQuery({
     queryFn: () => instance.get<Product>('/api/product/'+id),
-    queryKey: ['product']
+    queryKey: ['product_edit']
   });
 
   if (isLoading)
