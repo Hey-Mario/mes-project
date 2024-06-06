@@ -1,3 +1,5 @@
+"use client"
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 
@@ -6,8 +8,9 @@ interface Props {
 }
 
 const EditButton = ({ productId } : Props) => {
+  const router = useRouter();
   const onEdit = () => {
-    console.log("editing", productId)
+    router.push(`/product/edit/${productId}`)
   }
   return (
     <HiOutlinePencilSquare onClick={onEdit} color='blue' className='cursor-pointer' />
