@@ -90,7 +90,33 @@ export class EquipmentFactory implements IEquipmentFactory {
    - Implement adapter classes to unify interfaces.
 
 2. **Bridge**: Séparer les abstractions de processus de production des implémentations qui peuvent varier selon le type de produit ou de matériau.
-   - Use bridge pattern to decouple process logic from specific implementations.
+   
+   ```typescript
+   interface IProductionProcess {
+       startProcess(): void;
+       endProcess(): void;
+   }
+   ```
+
+   ```typescript
+   class FoodProductionProcess implements IProductionProcess {
+       startProcess() {
+           console.log("Démarrage du processus de production alimentaire.");
+       }
+       endProcess() {
+           console.log("Fin du processus de production alimentaire.");
+       }
+   }
+
+   class CarProductionProcess implements IProductionProcess {
+       startProcess() {
+           console.log("Démarrage du processus de production automobile.");
+       }
+       endProcess() {
+           console.log("Fin du processus de production automobile.");
+       }
+   }
+   ```
 
 3. **Composite**: Organiser les composants de production ou les tâches en structures hiérarchiques.
    - Implement composite pattern for task management.
@@ -102,10 +128,54 @@ export class EquipmentFactory implements IEquipmentFactory {
    - Create a facade class to provide a simplified interface to complex subsystems.
 
 6. **Flyweight**: Optimiser l'utilisation de la mémoire pour les détails partagés des produits ou des matériaux.
-   - Implement flyweight pattern for shared data.
+   ```typescript
+   class ProductFlyweightFactory {
+       private flyweights: Map<string, ProductFlyweight> = new Map();
+
+       getFlyweight(sharedState: any): ProductFlyweight {
+           const key = JSON.stringify(sharedState);
+           if (!this.flyweights.has(key)) {
+               this.flyweights.set(key, new ProductFlyweight(sharedState));
+           }
+           return this.flyweights.get(key);
+       }
+   }
+
+   class ProductFlyweight {
+       constructor(private sharedState: any) {}
+
+       operation(uniqueState: any): void {
+           console.log(`Flyweight: Affichage de l'état partagé (${JSON.stringify(this.sharedState)}) et de l'état unique (${JSON.stringify(uniqueState)})`);
+       }
+   }
+   ```
 
 7. **Proxy**: Contrôler l'accès aux informations critiques de la production ou aux commandes d'opération des machines.
    - Use proxy pattern to manage access control.
+   ```typescript
+   class SecureDataProxy {
+       constructor(private realData: SensitiveData) {}
+
+       accessData(user: User): void {
+           if (this.checkAccess(user)) {
+               this.realData.display();
+           } else {
+               console.log("Accès refusé.");
+           }
+       }
+
+       private checkAccess(user: User): boolean {
+           // Implémenter la logique de vérification des droits d'accès
+           return user.hasPermission("ACCESS_SENSITIVE_DATA");
+       }
+   }
+
+   class SensitiveData {
+       display(): void {
+           console.log("Affichage des données sensibles.");
+       }
+   }
+   ```
 
 ### Behavioral Patterns
 1. **Chain of Responsibility**: Gérer les approbations de modifications de processus en les passant à travers une chaîne de responsables.
