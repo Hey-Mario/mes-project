@@ -56,7 +56,7 @@ const ProductPage = () => {
               <Table.Cell>{product.description}</Table.Cell>
               <Table.Cell>{(new Date(product.createdAt)).toLocaleString()}</Table.Cell>
               <Table.Cell>
-                <div className='flex justify-around'>
+                <div className='flex gap-5'>
                   <DeleteButton productId={product.id} onDeleteSuccess={handleDeleteSuccess} />
                   <EditButton productId={product.id} />
                 </div>

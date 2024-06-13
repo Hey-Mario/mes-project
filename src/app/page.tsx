@@ -1,12 +1,15 @@
 import Link from "@/components/Link";
-import { Heading } from "@radix-ui/themes";
+import { Flex, Heading } from "@radix-ui/themes";
 
 export default function Home() {
   return (
     <>
       <Heading size="5">Hello World</Heading>
-      <Link href="/product">Product</Link> <br />
-      <Link href="/equipment">Equipment</Link>
+      <Flex direction={'column'}>
+        <Link href="/product">Product</Link>
+        <Link href="/equipment">Equipment</Link>
+        <Link href="/machine">Machine</Link>
+      </Flex>
     </>
   )
 }
