@@ -87,7 +87,99 @@ export class EquipmentFactory implements IEquipmentFactory {
 
 ### Structural Patterns
 1. **Adapter**: Intégrer des machines de différents fabricants ou des systèmes ERP tiers qui n'utilisent pas une interface commune. `(Mario)`
-   - Implement adapter classes to unify interfaces.
+```js
+export interface IMachine {
+  isOn: boolean;
+  isOff: boolean;
+  start(): void;
+  stop(): void;
+  getStatus(): string;
+}
+
+export class SimpleMachine {
+  powerOn() {
+    console.log('Simple Machine powered on');
+  }
+
+  powerOff() {
+    console.log('Simple Machine powered off');
+  }
+}
+
+export class ComplexMachine {
+  turnOn() {
+    console.log('Complex Machine turned on');
+  }
+
+  turnOff() {
+    console.log('Complex Machine turned off');
+  }
+}
+
+export class SimpleMachineAdapter implements IMachine {
+  private simpleMachine: SimpleMachine;
+  private running: boolean;
+
+  constructor(simpleMachine: SimpleMachine) {
+    this.simpleMachine = simpleMachine;
+    this.running = false;
+  }
+
+  start(): void {
+    this.simpleMachine.powerOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.simpleMachine.powerOff();
+    this.running = false;
+  }
+
+  getStatus(): string {
+    return this.running ? "Simple Machine is running" : "Simple Machine is stopped";
+  }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
+  }
+}
+
+export class ComplexMachineAdapter implements IMachine {
+  private complexMachine: ComplexMachine;
+  private running: boolean;
+
+  constructor(complexMachine: ComplexMachine) {
+    this.complexMachine = complexMachine;
+    this.running = false;
+  }
+
+  start(): void {
+    this.complexMachine.turnOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.complexMachine.turnOff();
+    this.running = false;
+  }
+
+  getStatus(): string {
+    return this.running ? "Complex Machine is running" : "Complex Machine is stopped";
+  }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
+  }
+}
+```
 
 2. **Bridge**: Séparer les abstractions de processus de production des implémentations qui peuvent varier selon le type de produit ou de matériau. `(Landry)`
    
@@ -231,3 +323,4 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 - **Prototype**: `src/app/api/equipment/[id]/clone/route.ts`
 - **Factory Method**: `src/app/common/factories/OrderFactory.ts`
 - **Abstract Factory**: `src/app/common/factories/EquipmentFactory.ts`
+- **Adapter**: `src/common/interfaces/IMachine.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
