@@ -336,7 +336,81 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
    - Implement strategy pattern for algorithm selection.
 
 10. **Template Method**: Définir le squelette d'un processus de production, permettant aux sous-classes de redéfinir certaines étapes sans changer la structure du processus. `(Mario)`
-    - Use template method for process definitions.
+```js
+export abstract class MachineBase implements IMachine {
+  protected running: boolean;
+
+  constructor() {
+    this.running = false;
+  }
+
+  abstract start(): void;
+  abstract stop(): void;
+  abstract getName(): string;
+
+  getStatus(): string {
+    return this.getName() + (this.running ? " is running" : " is stopped");
+  }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
+  }
+}
+
+...
+
+export class SimpleMachineAdapter extends MachineBase {
+  private simpleMachine: SimpleMachine;
+
+  constructor(simpleMachine: SimpleMachine) {
+    super();
+    this.simpleMachine = simpleMachine;
+  }
+
+  start(): void {
+    this.simpleMachine.powerOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.simpleMachine.powerOff();
+    this.running = false;
+  }
+
+  getName(): string {
+    return this.simpleMachine.getLabel();
+  }
+}
+
+...
+
+export class ComplexMachineAdapter extends MachineBase {
+  private complexMachine: ComplexMachine;
+
+  constructor(complexMachine: ComplexMachine) {
+    super();
+    this.complexMachine = complexMachine;
+  }
+
+  start(): void {
+    this.complexMachine.turnOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.complexMachine.turnOff();
+    this.running = false;
+  }
+
+  getName(): string {
+    return this.complexMachine.getMark()
+  }
+}
+```
 
 11. **Visitor**: Appliquer des opérations de maintenance, d'inspection ou d'audit sur les équipements ou les processus sans les modifier. `(Landry)`
     - Implement visitor pattern for operations on equipment.
@@ -349,3 +423,4 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 - **Factory Method**: `src/app/common/factories/OrderFactory.ts`
 - **Abstract Factory**: `src/app/common/factories/EquipmentFactory.ts`
 - **Adapter**: `src/common/interfaces/IMachine.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
+- **Template Method**: `src/common/bases/MachineBase.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`

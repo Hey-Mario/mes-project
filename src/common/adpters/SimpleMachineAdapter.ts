@@ -1,4 +1,4 @@
-import { MachineBase } from "../interfaces/IMachine";
+import { MachineBase } from "../bases/MachineBase";
 
 export class SimpleMachine {
   private label: string;
