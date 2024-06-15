@@ -87,7 +87,124 @@ export class EquipmentFactory implements IEquipmentFactory {
 
 ### Structural Patterns
 1. **Adapter**: Intégrer des machines de différents fabricants ou des systèmes ERP tiers qui n'utilisent pas une interface commune. `(Mario)`
-   - Implement adapter classes to unify interfaces.
+```js
+export interface IMachine {
+  isOn: boolean;
+  isOff: boolean;
+  start(): void;
+  stop(): void;
+  getStatus(): string;
+  getName(): string;
+}
+
+export abstract class MachineBase implements IMachine {
+  protected running: boolean;
+
+  constructor() {
+    this.running = false;
+  }
+
+  abstract start(): void;
+  abstract stop(): void;
+  abstract getName(): string;
+
+  getStatus(): string {
+    return this.getName() + (this.running ? " is running" : " is stopped");
+  }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
+  }
+}
+
+export class SimpleMachine {
+  private label: string;
+  constructor(label: string) {
+    this.label = label;
+  }
+
+  powerOn() {
+    console.log('Simple Machine powered on');
+  }
+
+  powerOff() {
+    console.log('Simple Machine powered off');
+  }
+
+  getLabel() {
+    return this.label;
+  }
+}
+
+export class SimpleMachineAdapter extends MachineBase {
+  private simpleMachine: SimpleMachine;
+
+  constructor(simpleMachine: SimpleMachine) {
+    super();
+    this.simpleMachine = simpleMachine;
+  }
+
+  start(): void {
+    this.simpleMachine.powerOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.simpleMachine.powerOff();
+    this.running = false;
+  }
+
+  getName(): string {
+    return this.simpleMachine.getLabel();
+  }
+}
+
+export class ComplexMachine {
+  private mark: string;
+  constructor(mark: string) {
+    this.mark = mark;
+  }
+
+  turnOn() {
+    console.log('Complex Machine turned on');
+  }
+
+  turnOff() {
+    console.log('Complex Machine turned off');
+  }
+
+  getMark() {
+    return this.mark;
+  }
+}
+
+export class ComplexMachineAdapter extends MachineBase {
+  private complexMachine: ComplexMachine;
+
+  constructor(complexMachine: ComplexMachine) {
+    super();
+    this.complexMachine = complexMachine;
+  }
+
+  start(): void {
+    this.complexMachine.turnOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.complexMachine.turnOff();
+    this.running = false;
+  }
+
+  getName(): string {
+    return this.complexMachine.getMark()
+  }
+}
+```
 
 2. **Bridge**: Séparer les abstractions de processus de production des implémentations qui peuvent varier selon le type de produit ou de matériau. `(Landry)`
    
@@ -219,7 +336,81 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
    - Implement strategy pattern for algorithm selection.
 
 10. **Template Method**: Définir le squelette d'un processus de production, permettant aux sous-classes de redéfinir certaines étapes sans changer la structure du processus. `(Mario)`
-    - Use template method for process definitions.
+```js
+export abstract class MachineBase implements IMachine {
+  protected running: boolean;
+
+  constructor() {
+    this.running = false;
+  }
+
+  abstract start(): void;
+  abstract stop(): void;
+  abstract getName(): string;
+
+  getStatus(): string {
+    return this.getName() + (this.running ? " is running" : " is stopped");
+  }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
+  }
+}
+
+...
+
+export class SimpleMachineAdapter extends MachineBase {
+  private simpleMachine: SimpleMachine;
+
+  constructor(simpleMachine: SimpleMachine) {
+    super();
+    this.simpleMachine = simpleMachine;
+  }
+
+  start(): void {
+    this.simpleMachine.powerOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.simpleMachine.powerOff();
+    this.running = false;
+  }
+
+  getName(): string {
+    return this.simpleMachine.getLabel();
+  }
+}
+
+...
+
+export class ComplexMachineAdapter extends MachineBase {
+  private complexMachine: ComplexMachine;
+
+  constructor(complexMachine: ComplexMachine) {
+    super();
+    this.complexMachine = complexMachine;
+  }
+
+  start(): void {
+    this.complexMachine.turnOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.complexMachine.turnOff();
+    this.running = false;
+  }
+
+  getName(): string {
+    return this.complexMachine.getMark()
+  }
+}
+```
 
 11. **Visitor**: Appliquer des opérations de maintenance, d'inspection ou d'audit sur les équipements ou les processus sans les modifier. `(Landry)`
     - Implement visitor pattern for operations on equipment.
@@ -231,3 +422,5 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 - **Prototype**: `src/app/api/equipment/[id]/clone/route.ts`
 - **Factory Method**: `src/app/common/factories/OrderFactory.ts`
 - **Abstract Factory**: `src/app/common/factories/EquipmentFactory.ts`
+- **Adapter**: `src/common/interfaces/IMachine.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
+- **Template Method**: `src/common/bases/MachineBase.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`

@@ -6,37 +6,57 @@ import { IMachine } from "@/common/interfaces/IMachine";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@radix-ui/themes";
 import MachineCard from "./_components/MachineCard";
-
-const machineA = new SimpleMachineAdapter(new SimpleMachine());
-const machineB = new ComplexMachineAdapter(new ComplexMachine());
-
-const machines: IMachine[] = [machineA, machineB];
-
-const handleStartMachines = () => {
-  machines.forEach((machine) => machine.start());
-};
-
-const handleStopMachines = () => {
-  machines.forEach((machine) => machine.stop());
-};
-
-const handleGetStatuses = () => {
-  machines.forEach((machine) => console.log(machine.getStatus()));
-};
+import { useState } from "react";
+import Center from "@/components/Center";
+import { message } from "antd";
 
 const MachinePage = () => {
+  const machineA = new SimpleMachineAdapter(new SimpleMachine("PrinterMachine"));
+  const machineB = new ComplexMachineAdapter(new ComplexMachine("ProductionMachine"));
+  
+  const [machines, setMachines] = useState<IMachine[]>([machineA, machineB]);
+
+  const handleStartMachines = () => {
+    const machines_ = machines;
+    machines_.forEach((machine) => machine.start());
+    setMachines([...machines_])
+  };
+  
+  const handleStopMachines = () => {
+    const machines_ = machines;
+    machines_.forEach((machine) => machine.stop());
+    setMachines([...machines_])
+  };
+  
+  const handleGetStatuses = () => {
+    const machines_ = machines;
+    machines_.forEach((machine) => {
+      const status = machine.getStatus();
+      console.log(status);
+      message.info(status);
+    });
+    setMachines([...machines_])
+  };
+
   return (
-    <div>
-      <Heading size="5">Manufacturing Execution System</Heading>
-      <Button onClick={handleStartMachines}>Start All Machines</Button>
-      <Button onClick={handleStopMachines}>Stop All Machines</Button>
-      <Button onClick={handleGetStatuses}>Get Machine Statuses</Button>
-      <div>
+    <Center className="h-full flex flex-col justify-evenly">
+      <div className="flex flex-col gap-5">
+        <Heading size="5">Manufacturing Execution System</Heading>
+        <div className="flex gap-3 justify-center w-full">
+          <Button onClick={handleStartMachines}>Start All Machines</Button>
+          <Button onClick={handleStopMachines}>Stop All Machines</Button>
+          <Button onClick={handleGetStatuses}>Get Machine Statuses</Button>
+        </div>
+        <p>
+          (Look at the console for more information)
+        </p>
+      </div>
+      <div className="flex gap-3 justify-center">
         {
           machines.map((machine, key) => <MachineCard machine={machine} key={key} />)
         }
       </div>
-    </div>
+    </Center>
   );
 };
 

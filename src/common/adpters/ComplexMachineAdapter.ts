@@ -1,7 +1,10 @@
-import { IMachine } from "../interfaces/IMachine";
+import { MachineBase } from "../bases/MachineBase";
 
 export class ComplexMachine {
-  private isOperational = false;
+  private mark: string;
+  constructor(mark: string) {
+    this.mark = mark;
+  }
 
   turnOn() {
     console.log('Complex Machine turned on');
@@ -10,15 +13,18 @@ export class ComplexMachine {
   turnOff() {
     console.log('Complex Machine turned off');
   }
+
+  getMark() {
+    return this.mark;
+  }
 }
 
-export class ComplexMachineAdapter implements IMachine {
+export class ComplexMachineAdapter extends MachineBase {
   private complexMachine: ComplexMachine;
-  private running: boolean;
 
   constructor(complexMachine: ComplexMachine) {
+    super();
     this.complexMachine = complexMachine;
-    this.running = false;
   }
 
   start(): void {
@@ -31,7 +37,7 @@ export class ComplexMachineAdapter implements IMachine {
     this.running = false;
   }
 
-  getStatus(): string {
-    return this.running ? "Complex Machine is running" : "Complex Machine is stopped";
+  getName(): string {
+    return this.complexMachine.getMark()
   }
 }
