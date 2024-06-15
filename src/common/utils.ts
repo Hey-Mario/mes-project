@@ -1,6 +1,6 @@
 export const toString = (value: any) => {
   return Object(value).toString();
-}
+};
 
 export const errorFormatter = (error: any) => {
   const formattedError = {
@@ -9,6 +9,6 @@ export const errorFormatter = (error: any) => {
     message: error.message,
     stack: error.stack,
     clientVersion: error.clientVersion,
-  }
+  };
   return formattedError;
-}
+};

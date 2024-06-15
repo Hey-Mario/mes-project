@@ -1,4 +1,3 @@
-import { EquipmentBuilder } from '@/common/builders/EquipmentBuilder';
 import { EquipmentFactory } from '@/common/factories/EquipmentFactory';
 import { prisma } from '@/lib/prisma';
 import { createEquipmentSchema } from '@/schema/equipment';
