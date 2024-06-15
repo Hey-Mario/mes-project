@@ -1,4 +1,4 @@
-import { IMachine, MachineBase } from "../interfaces/IMachine";
+import { MachineBase } from "../interfaces/IMachine";
 
 export class ComplexMachine {
   private mark: string;

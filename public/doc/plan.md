@@ -97,6 +97,29 @@ export interface IMachine {
   getName(): string;
 }
 
+export abstract class MachineBase implements IMachine {
+  protected running: boolean;
+
+  constructor() {
+    this.running = false;
+  }
+
+  abstract start(): void;
+  abstract stop(): void;
+  abstract getName(): string;
+
+  getStatus(): string {
+    return this.getName() + (this.running ? " is running" : " is stopped");
+  }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
+  }
+}
 
 export class SimpleMachine {
   private label: string;
@@ -114,6 +137,29 @@ export class SimpleMachine {
 
   getLabel() {
     return this.label;
+  }
+}
+
+export class SimpleMachineAdapter extends MachineBase {
+  private simpleMachine: SimpleMachine;
+
+  constructor(simpleMachine: SimpleMachine) {
+    super();
+    this.simpleMachine = simpleMachine;
+  }
+
+  start(): void {
+    this.simpleMachine.powerOn();
+    this.running = true;
+  }
+
+  stop(): void {
+    this.simpleMachine.powerOff();
+    this.running = false;
+  }
+
+  getName(): string {
+    return this.simpleMachine.getLabel();
   }
 }
 
@@ -136,49 +182,12 @@ export class ComplexMachine {
   }
 }
 
-export class SimpleMachineAdapter implements IMachine {
-  private simpleMachine: SimpleMachine;
-  private running: boolean;
-
-  constructor(simpleMachine: SimpleMachine) {
-    this.simpleMachine = simpleMachine;
-    this.running = false;
-  }
-
-  start(): void {
-    this.simpleMachine.powerOn();
-    this.running = true;
-  }
-
-  stop(): void {
-    this.simpleMachine.powerOff();
-    this.running = false;
-  }
-
-  getName(): string {
-    return this.simpleMachine.getLabel();
-  }
-
-  getStatus(): string {
-    return this.running ? "Simple Machine is running" : "Simple Machine is stopped";
-  }
-
-  get isOff() {
-    return !this.running;
-  }
-
-  get isOn() {
-    return this.running;
-  }
-}
-
-export class ComplexMachineAdapter implements IMachine {
+export class ComplexMachineAdapter extends MachineBase {
   private complexMachine: ComplexMachine;
-  private running: boolean;
 
   constructor(complexMachine: ComplexMachine) {
+    super();
     this.complexMachine = complexMachine;
-    this.running = false;
   }
 
   start(): void {
@@ -193,18 +202,6 @@ export class ComplexMachineAdapter implements IMachine {
 
   getName(): string {
     return this.complexMachine.getMark()
-  }
-
-  getStatus(): string {
-    return this.running ? "Complex Machine is running" : "Complex Machine is stopped";
-  }
-
-  get isOff() {
-    return !this.running;
-  }
-
-  get isOn() {
-    return this.running;
   }
 }
 ```
