@@ -1,8 +1,6 @@
 import { IMachine } from "../interfaces/IMachine";
 
 export class ComplexMachine {
-  private isOperational = false;
-
   turnOn() {
     console.log('Complex Machine turned on');
   }
@@ -33,5 +31,13 @@ export class ComplexMachineAdapter implements IMachine {
 
   getStatus(): string {
     return this.running ? "Complex Machine is running" : "Complex Machine is stopped";
+  }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
   }
 }

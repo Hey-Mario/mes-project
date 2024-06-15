@@ -32,4 +32,12 @@ export class SimpleMachineAdapter implements IMachine {
   getStatus(): string {
     return this.running ? "Simple Machine is running" : "Simple Machine is stopped";
   }
+
+  get isOff() {
+    return !this.running;
+  }
+
+  get isOn() {
+    return this.running;
+  }
 }
