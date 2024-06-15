@@ -5,7 +5,7 @@ import { Badge } from 'antd';
 const MachineCard = ({ machine }: { machine: IMachine }) => {
   return (
     <div className='py-5 px-10 border-black border-2'>
-      <span>MACHINE</span> <br />
+      <span>{machine.getName()}</span> <br />
       <Badge status={machine.isOn ? 'success' : 'error'} className='size-4' />
     </div>
   )

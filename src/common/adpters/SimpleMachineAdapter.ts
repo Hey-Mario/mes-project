@@ -1,6 +1,11 @@
-import { IMachine } from "../interfaces/IMachine";
+import { IMachine, MachineBase } from "../interfaces/IMachine";
 
 export class SimpleMachine {
+  private label: string;
+  constructor(label: string) {
+    this.label = label;
+  }
+
   powerOn() {
     console.log('Simple Machine powered on');
   }
@@ -8,15 +13,18 @@ export class SimpleMachine {
   powerOff() {
     console.log('Simple Machine powered off');
   }
+
+  getLabel() {
+    return this.label;
+  }
 }
 
-export class SimpleMachineAdapter implements IMachine {
+export class SimpleMachineAdapter extends MachineBase {
   private simpleMachine: SimpleMachine;
-  private running: boolean;
 
   constructor(simpleMachine: SimpleMachine) {
+    super();
     this.simpleMachine = simpleMachine;
-    this.running = false;
   }
 
   start(): void {
@@ -29,15 +37,7 @@ export class SimpleMachineAdapter implements IMachine {
     this.running = false;
   }
 
-  getStatus(): string {
-    return this.running ? "Simple Machine is running" : "Simple Machine is stopped";
-  }
-
-  get isOff() {
-    return !this.running;
-  }
-
-  get isOn() {
-    return this.running;
+  getName(): string {
+    return this.simpleMachine.getLabel();
   }
 }

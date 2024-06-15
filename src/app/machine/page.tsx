@@ -11,8 +11,8 @@ import Center from "@/components/Center";
 import { message } from "antd";
 
 const MachinePage = () => {
-  const machineA = new SimpleMachineAdapter(new SimpleMachine());
-  const machineB = new ComplexMachineAdapter(new ComplexMachine());
+  const machineA = new SimpleMachineAdapter(new SimpleMachine("PrinterMachine"));
+  const machineB = new ComplexMachineAdapter(new ComplexMachine("ProductionMachine"));
   
   const [machines, setMachines] = useState<IMachine[]>([machineA, machineB]);
 

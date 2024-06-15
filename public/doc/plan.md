@@ -94,9 +94,16 @@ export interface IMachine {
   start(): void;
   stop(): void;
   getStatus(): string;
+  getName(): string;
 }
 
+
 export class SimpleMachine {
+  private label: string;
+  constructor(label: string) {
+    this.label = label;
+  }
+
   powerOn() {
     console.log('Simple Machine powered on');
   }
@@ -104,15 +111,28 @@ export class SimpleMachine {
   powerOff() {
     console.log('Simple Machine powered off');
   }
+
+  getLabel() {
+    return this.label;
+  }
 }
 
 export class ComplexMachine {
+  private mark: string;
+  constructor(mark: string) {
+    this.mark = mark;
+  }
+
   turnOn() {
     console.log('Complex Machine turned on');
   }
 
   turnOff() {
     console.log('Complex Machine turned off');
+  }
+
+  getMark() {
+    return this.mark;
   }
 }
 
@@ -133,6 +153,10 @@ export class SimpleMachineAdapter implements IMachine {
   stop(): void {
     this.simpleMachine.powerOff();
     this.running = false;
+  }
+
+  getName(): string {
+    return this.simpleMachine.getLabel();
   }
 
   getStatus(): string {
@@ -165,6 +189,10 @@ export class ComplexMachineAdapter implements IMachine {
   stop(): void {
     this.complexMachine.turnOff();
     this.running = false;
+  }
+
+  getName(): string {
+    return this.complexMachine.getMark()
   }
 
   getStatus(): string {
