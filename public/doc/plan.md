@@ -324,7 +324,33 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
    - Implement a mediator to manage module interactions.
 
 6. **Memento**: Sauvegarder et restaurer les états précédents des configurations de processus ou des paramètres de machine. `(Mionja)`
-   - Use memento pattern for state management.
+```js
+async saveState(equipment: EquipmentMemento): Promise<void> {
+  const equipments = this.getEquipmentStates();
+  const newEquipment = { ...equipments, [equipment.id]: equipment };
+  Cookies.set("equipmentStates", JSON.stringify(newEquipment), {
+    expires: 1,
+  });
+}
+
+...
+
+await equipmentService.saveState(equipment);
+await instance.patch("/api/equipment/" + equipment.id, data);
+
+...
+
+const handleRestoreState = async () => {
+  const equipmentStates = equipmentService.getEquipmentStates();
+  if (equipmentId && equipmentStates[equipmentId]) {
+    const equipment = equipmentStates[equipmentId];
+    await instance.patch("/api/equipment/" + equipmentId, equipment);
+    equipmentService.removeEquipmentState(equipmentId);
+    onRestoreSuccess?.(equipmentId);
+  }
+};
+
+```
 
 7. **Observer**: Notifier les opérateurs ou les gestionnaires des changements dans le processus de production ou des alertes de maintenance. `(Mario)`
    - Implement observer pattern for event notifications.
@@ -424,3 +450,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Abstract Factory**: `src/app/common/factories/EquipmentFactory.ts`
 - **Adapter**: `src/common/interfaces/IMachine.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
 - **Template Method**: `src/common/bases/MachineBase.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
+- **Memento**: `src/common/services/EquipmentService.ts`, `scr/app/equipment/_components/RestoreButton`, `scr/app/equipment/_components/EquipmentForm`
