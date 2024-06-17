@@ -1,6 +1,10 @@
 import { Equipment } from "@/common/models/Equipment";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { ProductionManager } from "@/common/Production/ProductionManager";
+import { FoodProductionProcess } from "@/common/Production/FoodProductionProcess";
+import { CarProductionProcess } from "@/common/Production/CarProductionProcess";
+import { IProductionProcess } from "@/common/interfaces/IProductionProcess";
 
 export async function POST(
   req: NextRequest,
@@ -20,6 +24,23 @@ export async function POST(
       );
     }
 
+    let productionProcess: IProductionProcess | null = null;
+    if (existingEquipment.type === 'Food') {
+        productionProcess = new FoodProductionProcess();
+    } else if (existingEquipment.type === 'Car') {
+        productionProcess = new CarProductionProcess();
+    }
+
+    if (!productionProcess) {
+      return NextResponse.json(
+        { message: "No suitable production process found for this equipment type" },
+        { status: 400 }
+      );
+    }
+
+    const productionManager = new ProductionManager(productionProcess);
+    productionManager.startProduction();
+
     const clonedEquipment = new Equipment(
       existingEquipment.name,
       existingEquipment.type,
@@ -36,6 +57,9 @@ export async function POST(
         status: clonedEquipment.status,
       },
     });
+
+    productionManager.endProduction();
+
     return NextResponse.json(
       { message: "Equipment cloned successfully", createdEquipment },
       { status: 201 }

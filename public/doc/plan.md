@@ -46,6 +46,20 @@ const product = await prisma.product.create({ data: productData });
         status: clonedEquipment.status,
       },
     });
+
+    productionManager.endProduction();
+
+    return NextResponse.json(
+      { message: "Equipment cloned successfully", createdEquipment },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 ```
 
 4. **Factory Method**: Créer des instances de différents types de commandes de production ou de notifications sans exposer la logique de création au client. `(Mionja)`
@@ -207,33 +221,31 @@ export class ComplexMachineAdapter extends MachineBase {
 ```
 
 2. **Bridge**: Séparer les abstractions de processus de production des implémentations qui peuvent varier selon le type de produit ou de matériau. `(Landry)`
-   
-   ```typescript
-   interface IProductionProcess {
-       startProcess(): void;
-       endProcess(): void;
-   }
-   ```
 
-   ```typescript
-   class FoodProductionProcess implements IProductionProcess {
-       startProcess() {
-           console.log("Démarrage du processus de production alimentaire.");
-       }
-       endProcess() {
-           console.log("Fin du processus de production alimentaire.");
-       }
-   }
+```typescript
+interface IProductionProcess {
+   start(): void;
+   end(): void;
+}
 
-   class CarProductionProcess implements IProductionProcess {
-       startProcess() {
-           console.log("Démarrage du processus de production automobile.");
-       }
-       endProcess() {
-           console.log("Fin du processus de production automobile.");
-       }
+class FoodProductionProcess implements IProductionProcess {
+   start() {
+       console.log("Démarrage du processus de production alimentaire.");
    }
-   ```
+   end() {
+       console.log("Fin du processus de production alimentaire.");
+   }
+}
+
+class CarProductionProcess implements IProductionProcess {
+   start() {
+       console.log("Démarrage du processus de production automobile.");
+   }
+   end() {
+       console.log("Fin du processus de production automobile.");
+   }
+}
+```
 
 3. **Composite**: Organiser les composants de production ou les tâches en structures hiérarchiques. `(Mario)`
    - Implement composite pattern for task management.
@@ -453,3 +465,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Adapter**: `src/common/interfaces/IMachine.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
 - **Template Method**: `src/common/bases/MachineBase.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
 - **Memento**: `src/common/services/EquipmentService.ts`, `scr/app/equipment/_components/RestoreButton`, `scr/app/equipment/_components/EquipmentForm`
+- **Bridge**: `src/app/api/equipment/[id]/clone/route.ts`, `src/common/Production/ProductionManager.ts`, `src/common/Production/FoodProductionProcess.ts`, `src/common/Production/CarProductionProcess.ts`
