@@ -242,7 +242,9 @@ export class ComplexMachineAdapter extends MachineBase {
    - Use decorators to extend process functionalities dynamically.
 
 5. **Facade**: Simplifier les interactions complexes entre les différents modules du système de production. `(Mionja)`
-   - Create a facade class to provide a simplified interface to complex subsystems.
+```js
+
+```
 
 6. **Flyweight**: Optimiser l'utilisation de la mémoire pour les détails partagés des produits ou des matériaux. `(Landry)`
    ```typescript
