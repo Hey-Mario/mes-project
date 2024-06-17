@@ -255,7 +255,22 @@ class CarProductionProcess implements IProductionProcess {
 
 5. **Facade**: Simplifier les interactions complexes entre les différents modules du système de production. `(Mionja)`
 ```js
+export class ProductionFacade {
+  private inventory: InventoryManagement;
+  private orders: OrderProcessing;
 
+  constructor() {
+    this.inventory = new InventoryManagement();
+    this.orders = new OrderProcessing();
+  }
+
+  processOrderAndStock() {
+    this.inventory.checkStock();
+    this.orders.processOrder();
+    this.inventory.updateStock();
+    this.orders.generateInvoice();
+  }
+}
 ```
 
 6. **Flyweight**: Optimiser l'utilisation de la mémoire pour les détails partagés des produits ou des matériaux. `(Landry)`
@@ -466,3 +481,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Template Method**: `src/common/bases/MachineBase.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
 - **Memento**: `src/common/services/EquipmentService.ts`, `scr/app/equipment/_components/RestoreButton`, `scr/app/equipment/_components/EquipmentForm`
 - **Bridge**: `src/app/api/equipment/[id]/clone/route.ts`, `src/common/Production/ProductionManager.ts`, `src/common/Production/FoodProductionProcess.ts`, `src/common/Production/CarProductionProcess.ts`
+- **Facade**: `src/common/facades/ProductionFacade.ts`
