@@ -1,4 +1,4 @@
-import { IMachine } from "../interfaces/IMachine";
+import { IMachine, MachineContext } from "../interfaces/IMachine";
 
 
 export abstract class MachineBase implements IMachine {
@@ -14,6 +14,20 @@ export abstract class MachineBase implements IMachine {
 
   getStatus(): string {
     return this.getName() + (this.running ? " is running" : " is stopped");
+  }
+
+  handleContext(context: MachineContext) {
+    const machineName = this.getName();
+    switch(context[machineName]) {
+      case 'stopped':
+        this.stop();
+        break;
+      case 'started':
+        this.start();
+        break;
+      default:
+        break;
+    }
   }
 
   get isOff() {

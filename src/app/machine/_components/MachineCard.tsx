@@ -1,7 +1,7 @@
 import { IMachine } from '@/common/interfaces/IMachine';
 import React from 'react';
 import { Badge } from 'antd';
-import './style.css';
+import './../style.css';
 
 const MachineCard = ({ machine }: { machine: IMachine }) => {
   return (

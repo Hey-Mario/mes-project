@@ -2,19 +2,28 @@
 
 import { ComplexMachine, ComplexMachineAdapter } from "@/common/adpters/ComplexMachineAdapter";
 import { SimpleMachine, SimpleMachineAdapter } from "@/common/adpters/SimpleMachineAdapter";
-import { IMachine } from "@/common/interfaces/IMachine";
+import { IMachine, MachineContext } from "@/common/interfaces/IMachine";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@radix-ui/themes";
+import { Code, Heading } from "@radix-ui/themes";
 import MachineCard from "./_components/MachineCard";
 import { useState } from "react";
 import Center from "@/components/Center";
 import { message } from "antd";
 import { MachineInterpreter } from "@/lib/interpreter/machine-interpreter";
+import './style.css'
 
 const MachinePage = () => {
   const machineA = new SimpleMachineAdapter(new SimpleMachine("PrinterMachine"));
   const machineB = new ComplexMachineAdapter(new ComplexMachine("ProductionMachine"));
-  
+  const mainScript = `
+    START PrinterMachine
+    STOP PrinterMachine
+    START ProductionMachine
+    SET_SPEED 1000
+    STOP ProductionMachine
+    START PrinterMachine
+  `
+
   const [machines, setMachines] = useState<IMachine[]>([machineA, machineB]);
 
   const handleStartMachines = () => {
@@ -40,17 +49,33 @@ const MachinePage = () => {
   };
 
   const handleRunScript = () => {
+    handleRunScript_(mainScript);
+  };
+
+  const handleRunScript_ = (script: string) => {
     const interpreter = new MachineInterpreter();
     const context: Record<string, string | number> = {};
-    interpreter.parse(`
-      START PrinterMachine
-      STOP PrinterMachine
-      START ProductionMachine
-      SET_SPEED 1000
-    `);
+    interpreter.parse(script);
     interpreter.interpret(context);
-    console.log(context);
+    checkAndHandleContext(context);
   };
+
+  const handleRunScriptOneByOne = async () => {
+    const interpreter = new MachineInterpreter();
+    const scripts = interpreter.split(mainScript);
+    for (const script of scripts) {
+      await new Promise<void>((resolve) => setTimeout(() => {
+        handleRunScript_(script);
+        resolve();
+      }, 500));
+    }
+  };
+
+  const checkAndHandleContext = (context: MachineContext) => {
+    const machines_ = machines;
+    machines_.forEach((machine) => machine.handleContext(context));
+    setMachines([...machines_])
+  }
 
   return (
     <Center className="h-full flex flex-col justify-evenly">
@@ -60,7 +85,6 @@ const MachinePage = () => {
           <Button onClick={handleStartMachines}>Start All Machines</Button>
           <Button onClick={handleStopMachines}>Stop All Machines</Button>
           <Button onClick={handleGetStatuses}>Get Machine Statuses</Button>
-          <Button onClick={handleRunScript}>Run Script</Button>
         </div>
         <p>
           (Look at the console for more information)
@@ -70,6 +94,15 @@ const MachinePage = () => {
         {
           machines.map((machine, key) => <MachineCard machine={machine} key={key} />)
         }
+      </div>
+      <div>
+        <div className="script-container">
+          <span className="whitespace-break-spaces">{mainScript}</span>
+        </div>
+        <div className="flex gap-3 justify-center w-full m-3">
+          <Button onClick={handleRunScript}>Run full script</Button>
+          <Button onClick={handleRunScriptOneByOne}>Run Script One by One</Button>
+        </div>
       </div>
     </Center>
   );

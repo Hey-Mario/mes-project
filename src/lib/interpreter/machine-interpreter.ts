@@ -1,11 +1,7 @@
-// lib/interpreter.ts
-
-interface Context {
-  [key: string]: string | number;
-}
+import { MachineContext } from "@/common/interfaces/IMachine";
 
 abstract class Expression {
-  abstract interpret(context: Context): void;
+  abstract interpret(context: MachineContext): void;
 }
 
 class StartMachineExpression extends Expression {
@@ -16,7 +12,7 @@ class StartMachineExpression extends Expression {
     this.machineId = machineId;
   }
 
-  interpret(context: Context): void {
+  interpret(context: MachineContext): void {
     context[this.machineId] = 'started';
   }
 }
@@ -29,7 +25,7 @@ class StopMachineExpression extends Expression {
     this.machineId = machineId;
   }
 
-  interpret(context: Context): void {
+  interpret(context: MachineContext): void {
     context[this.machineId] = 'stopped';
   }
 }
@@ -42,7 +38,7 @@ class SetSpeedExpression extends Expression {
     this.speed = speed;
   }
 
-  interpret(context: Context): void {
+  interpret(context: MachineContext): void {
     context["speed"] = this.speed;
   }
 }
@@ -65,7 +61,13 @@ class MachineInterpreter {
     }
   }
 
-  interpret(context: Context): void {
+  split(script: string): string[] {
+    this.expressions = [];
+    const lines = script.split('\n');
+    return lines.map(v => v.trim()).filter(v => v !== "");
+  }
+
+  interpret(context: MachineContext): void {
     for (const expression of this.expressions) {
       expression.interpret(context);
     }
