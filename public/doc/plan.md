@@ -533,7 +533,46 @@ const handleProcessOrderAndStock = () => {
    - Use state pattern to manage machine states.
 
 9. **Strategy**: Permettre la modification des algorithmes de contrôle de qualité ou des logiques de planification. `(Mionja)`
-   - Implement strategy pattern for algorithm selection.
+```js
+import { IQualityControlStrategy } from "../interfaces/IQualityControlStrategy";
+
+export class QualityControlContext {
+  private strategy: IQualityControlStrategy;
+
+  constructor(strategy: IQualityControlStrategy) {
+    this.strategy = strategy;
+  }
+
+  setStrategy(strategy: IQualityControlStrategy) {
+    this.strategy = strategy;
+  }
+
+  executeStrategy(data: any): boolean {
+    return this.strategy.execute(data);
+  }
+}
+
+...
+
+import { ISchedulingStrategy } from "../interfaces/ISchedulingStrategy";
+
+export class SchedulingContext {
+  private strategy: ISchedulingStrategy;
+
+  constructor(strategy: ISchedulingStrategy) {
+    this.strategy = strategy;
+  }
+
+  setStrategy(strategy: ISchedulingStrategy) {
+    this.strategy = strategy;
+  }
+
+  executeStrategy(tasks: any[]): any[] {
+    return this.strategy.schedule(tasks);
+  }
+}
+
+```
 
 10. **Template Method**: Définir le squelette d'un processus de production, permettant aux sous-classes de redéfinir certaines étapes sans changer la structure du processus. `(Mario)`
 ```js
@@ -630,3 +669,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Decorator**: `src/common/decorators/StatusNotificationDecorator.ts`
 - **Interpreter**: `src/lib/interpreter/machine-interpreter.ts`, `src/app/machine/page.tsx`
 - **Observer**: `src/common/interfaces/notification/NotificationTypeEnum.ts`, `src/common/interfaces/notification/Subject.ts`, `src/common/interfaces/notification/Observer.ts`,`src/common/classes/production/Operator.ts`, `src/common/classes/production/ProductionProcess.ts`
+- **Strategy**: `src/common/contexts/QualityControlContext.ts`, `src/common/contexts/SchedulingContext.ts`

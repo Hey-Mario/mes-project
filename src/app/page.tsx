@@ -10,6 +10,7 @@ export default function Home() {
         <Link href="/equipment">Equipment</Link>
         <Link href="/machine">Machine</Link>
         <Link href="/production-process">Production Process</Link>
+        <Link href="/quality-control">Quality Control</Link>
       </Flex>
     </>
   );
