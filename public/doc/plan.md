@@ -431,7 +431,103 @@ const handleRestoreState = async () => {
 ```
 
 7. **Observer**: Notifier les opérateurs ou les gestionnaires des changements dans le processus de production ou des alertes de maintenance. `(Mario)`
-   - Implement observer pattern for event notifications.
+
+```js
+export interface Observer {
+  update(event: string, type: NotificationTypeEnum): void;
+}
+
+export interface Subject {
+  registerObserver(observer: Observer): void;
+  removeObserver(observer: Observer): void;
+  notifyObservers(event: string, type: NotificationTypeEnum): void;
+}
+
+export class Operator implements Observer {
+  constructor(private name: string) {}
+
+  async update(event: string, type: NotificationTypeEnum = NotificationTypeEnum.INFO) {
+    const message = `${this.name} notified of event: ${event}`;
+    switch(type) {
+      case NotificationTypeEnum.SUCCESS:
+        notification.success({ message });
+        break;
+      case NotificationTypeEnum.WARNING:
+        notification.warning({ message });
+        break;
+      case NotificationTypeEnum.ERROR:
+        notification.error({ message });
+        break;
+      case NotificationTypeEnum.INFO:
+      default:
+        notification.info({ message });
+        break;
+    }
+    console.log(message)
+    const body = { name: this.name, event }
+    await instance.post('/api/notify', body)
+  }
+}
+
+...
+
+export class ProductionProcess implements Subject {
+  private observers: Observer[] = [];
+
+  registerObserver(observer: Observer): void {
+    this.observers.push(observer);
+  }
+
+  removeObserver(observer: Observer): void {
+    const index = this.observers.indexOf(observer);
+    if (index > -1) {
+      this.observers.splice(index, 1);
+    }
+  }
+
+  notifyObservers(event: string, type: NotificationTypeEnum): void {
+    for (const observer of this.observers) {
+      observer.update(event, type);
+    }
+  }
+
+  changeProcess(event: string, type: NotificationTypeEnum): void {
+    this.notifyObservers(event, type);
+  }
+}
+
+...
+
+const productionProcess = new ProductionProcess();
+  
+// Simulation of multiple users
+const operator1 = new Operator('Alice');
+const operator2 = new Operator('Bob');
+
+useEffect(() => {
+  productionProcess.registerObserver(operator1);
+  productionProcess.registerObserver(operator2);
+
+  return () => {
+    productionProcess.removeObserver(operator1);
+    productionProcess.removeObserver(operator2);
+  };
+}, []);
+
+...
+
+const handleProcessOrderAndStock = () => {
+  productionProcess.changeProcess('Production Process Starting', NotificationTypeEnum.WARNING);
+  productionFacade.processOrderAndStock();
+  productionProcess.changeProcess('Production Process Ending', NotificationTypeEnum.SUCCESS);
+};
+
+...
+
+<Button onClick={handleProcessOrderAndStock}>
+  Start Order Processing
+</Button>
+```
 
 8. **State**: Modifier le comportement des machines ou des processus en fonction de leur état, comme actif, en maintenance, ou en arrêt. `(Landry)`
    - Use state pattern to manage machine states.
@@ -533,3 +629,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Facade**: `src/common/facades/ProductionFacade.ts`
 - **Decorator**: `src/common/decorators/StatusNotificationDecorator.ts`
 - **Interpreter**: `src/lib/interpreter/machine-interpreter.ts`, `src/app/machine/page.tsx`
+- **Observer**: `src/common/interfaces/notification/NotificationTypeEnum.ts`, `src/common/interfaces/notification/Subject.ts`, `src/common/interfaces/notification/Observer.ts`,`src/common/classes/production/Operator.ts`, `src/common/classes/production/ProductionProcess.ts`
