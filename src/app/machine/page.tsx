@@ -9,6 +9,7 @@ import MachineCard from "./_components/MachineCard";
 import { useState } from "react";
 import Center from "@/components/Center";
 import { message } from "antd";
+import { MachineInterpreter } from "@/lib/interpreter/machine-interpreter";
 
 const MachinePage = () => {
   const machineA = new SimpleMachineAdapter(new SimpleMachine("PrinterMachine"));
@@ -38,6 +39,19 @@ const MachinePage = () => {
     setMachines([...machines_])
   };
 
+  const handleRunScript = () => {
+    const interpreter = new MachineInterpreter();
+    const context: Record<string, string | number> = {};
+    interpreter.parse(`
+      START PrinterMachine
+      STOP PrinterMachine
+      START ProductionMachine
+      SET_SPEED 1000
+    `);
+    interpreter.interpret(context);
+    console.log(context);
+  };
+
   return (
     <Center className="h-full flex flex-col justify-evenly">
       <div className="flex flex-col gap-5">
@@ -46,6 +60,7 @@ const MachinePage = () => {
           <Button onClick={handleStartMachines}>Start All Machines</Button>
           <Button onClick={handleStopMachines}>Stop All Machines</Button>
           <Button onClick={handleGetStatuses}>Get Machine Statuses</Button>
+          <Button onClick={handleRunScript}>Run Script</Button>
         </div>
         <p>
           (Look at the console for more information)
