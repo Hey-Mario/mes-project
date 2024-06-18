@@ -1,13 +1,13 @@
 import { InventoryManagement } from "./InventoryManagement";
 import { OrderProcessing } from "./OrderProcessing";
 
-export class ProductionFacade {
+class ProductionMediator {
   private inventory: InventoryManagement;
   private orders: OrderProcessing;
 
-  constructor() {
-    this.inventory = new InventoryManagement();
-    this.orders = new OrderProcessing();
+  constructor(inventory: InventoryManagement, orders: OrderProcessing) {
+    this.inventory = inventory;
+    this.orders = orders;
   }
 
   processOrderAndStock() {
@@ -15,5 +15,19 @@ export class ProductionFacade {
     this.orders.processOrder();
     this.inventory.updateStock();
     this.orders.generateInvoice();
+  }
+}
+
+export class ProductionFacade {
+  private mediator: ProductionMediator;
+
+  constructor() {
+    const inventory = new InventoryManagement();
+    const orders = new OrderProcessing();
+    this.mediator = new ProductionMediator(inventory, orders);
+  }
+
+  processOrderAndStock() {
+    this.mediator.processOrderAndStock();
   }
 }

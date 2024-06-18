@@ -266,19 +266,16 @@ export class StatusNotificationDecorator implements IProcess {
 5. **Facade**: Simplifier les interactions complexes entre les différents modules du système de production. `(Mionja)`
 ```js
 export class ProductionFacade {
-  private inventory: InventoryManagement;
-  private orders: OrderProcessing;
+  private mediator: ProductionMediator;
 
   constructor() {
-    this.inventory = new InventoryManagement();
-    this.orders = new OrderProcessing();
+    const inventory = new InventoryManagement();
+    const orders = new OrderProcessing();
+    this.mediator = new ProductionMediator(inventory, orders);
   }
 
   processOrderAndStock() {
-    this.inventory.checkStock();
-    this.orders.processOrder();
-    this.inventory.updateStock();
-    this.orders.generateInvoice();
+    this.mediator.processOrderAndStock();
   }
 }
 ```
@@ -360,7 +357,24 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
    - Use iterator pattern for collections.
 
 5. **Mediator**: Coordonner les interactions complexes entre les modules de planification, de production, de qualité, et de stockage. `(Mionja)`
-   - Implement a mediator to manage module interactions.
+```js
+class ProductionMediator {
+  private inventory: InventoryManagement;
+  private orders: OrderProcessing;
+
+  constructor(inventory: InventoryManagement, orders: OrderProcessing) {
+    this.inventory = inventory;
+    this.orders = orders;
+  }
+
+  processOrderAndStock() {
+    this.inventory.checkStock();
+    this.orders.processOrder();
+    this.inventory.updateStock();
+    this.orders.generateInvoice();
+  }
+}
+```
 
 6. **Memento**: Sauvegarder et restaurer les états précédents des configurations de processus ou des paramètres de machine. `(Mionja)`
 ```js
