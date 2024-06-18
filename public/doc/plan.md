@@ -344,7 +344,32 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 ```
 
 3. **Interpreter**: Analyser et exécuter des scripts ou des commandes complexes pour les configurations d'automatisation. `(Mario)`
-   - Implement an interpreter for automation scripts.
+
+```js
+const mainScript = `
+  START PrinterMachine
+  STOP PrinterMachine
+  START ProductionMachine
+  SET_SPEED 1000
+  STOP ProductionMachine
+  START PrinterMachine
+`
+...
+
+const handleRunScript = () => {
+  handleRunScript_(mainScript);
+};
+
+...
+
+const handleRunScript_ = (script: string) => {
+  const interpreter = new MachineInterpreter();
+  const context: Record<string, string | number> = {};
+  interpreter.parse(script);
+  interpreter.interpret(context);
+  checkAndHandleContext(context);
+};
+```
 
 4. **Iterator**: Fournir un moyen de parcourir séquentiellement les collections de commandes de production ou les lots de matériaux. `(Landry)`
    - Use iterator pattern for collections.
@@ -482,3 +507,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Memento**: `src/common/services/EquipmentService.ts`, `scr/app/equipment/_components/RestoreButton`, `scr/app/equipment/_components/EquipmentForm`
 - **Bridge**: `src/app/api/equipment/[id]/clone/route.ts`, `src/common/Production/ProductionManager.ts`, `src/common/Production/FoodProductionProcess.ts`, `src/common/Production/CarProductionProcess.ts`
 - **Facade**: `src/common/facades/ProductionFacade.ts`
+- **Interpreter**: `src/lib/interpreter/machine-interpreter.ts`, `src/app/machine/page.tsx`
