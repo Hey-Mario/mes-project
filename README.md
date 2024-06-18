@@ -114,6 +114,20 @@ const product = await prisma.product.create({ data: productData });
         status: clonedEquipment.status,
       },
     });
+
+    productionManager.endProduction();
+
+    return NextResponse.json(
+      { message: "Equipment cloned successfully", createdEquipment },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 ```
 
 4. **Factory Method**: Créer des instances de différents types de commandes de production ou de notifications sans exposer la logique de création au client. `(Mionja)`
@@ -275,33 +289,31 @@ export class ComplexMachineAdapter extends MachineBase {
 ```
 
 2. **Bridge**: Séparer les abstractions de processus de production des implémentations qui peuvent varier selon le type de produit ou de matériau. `(Landry)`
-   
-   ```typescript
-   interface IProductionProcess {
-       startProcess(): void;
-       endProcess(): void;
-   }
-   ```
 
-   ```typescript
-   class FoodProductionProcess implements IProductionProcess {
-       startProcess() {
-           console.log("Démarrage du processus de production alimentaire.");
-       }
-       endProcess() {
-           console.log("Fin du processus de production alimentaire.");
-       }
-   }
+```typescript
+interface IProductionProcess {
+   start(): void;
+   end(): void;
+}
 
-   class CarProductionProcess implements IProductionProcess {
-       startProcess() {
-           console.log("Démarrage du processus de production automobile.");
-       }
-       endProcess() {
-           console.log("Fin du processus de production automobile.");
-       }
+class FoodProductionProcess implements IProductionProcess {
+   start() {
+       console.log("Démarrage du processus de production alimentaire.");
    }
-   ```
+   end() {
+       console.log("Fin du processus de production alimentaire.");
+   }
+}
+
+class CarProductionProcess implements IProductionProcess {
+   start() {
+       console.log("Démarrage du processus de production automobile.");
+   }
+   end() {
+       console.log("Fin du processus de production automobile.");
+   }
+}
+```
 
 3. **Composite**: Organiser les composants de production ou les tâches en structures hiérarchiques. `(Mario)`
    - Implement composite pattern for task management.
@@ -310,7 +322,24 @@ export class ComplexMachineAdapter extends MachineBase {
    - Use decorators to extend process functionalities dynamically.
 
 5. **Facade**: Simplifier les interactions complexes entre les différents modules du système de production. `(Mionja)`
-   - Create a facade class to provide a simplified interface to complex subsystems.
+```js
+export class ProductionFacade {
+  private inventory: InventoryManagement;
+  private orders: OrderProcessing;
+
+  constructor() {
+    this.inventory = new InventoryManagement();
+    this.orders = new OrderProcessing();
+  }
+
+  processOrderAndStock() {
+    this.inventory.checkStock();
+    this.orders.processOrder();
+    this.inventory.updateStock();
+    this.orders.generateInvoice();
+  }
+}
+```
 
 6. **Flyweight**: Optimiser l'utilisation de la mémoire pour les détails partagés des produits ou des matériaux. `(Landry)`
    ```typescript
@@ -383,7 +412,32 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 ```
 
 3. **Interpreter**: Analyser et exécuter des scripts ou des commandes complexes pour les configurations d'automatisation. `(Mario)`
-   - Implement an interpreter for automation scripts.
+
+```js
+const mainScript = `
+  START PrinterMachine
+  STOP PrinterMachine
+  START ProductionMachine
+  SET_SPEED 1000
+  STOP ProductionMachine
+  START PrinterMachine
+`
+...
+
+const handleRunScript = () => {
+  handleRunScript_(mainScript);
+};
+
+...
+
+const handleRunScript_ = (script: string) => {
+  const interpreter = new MachineInterpreter();
+  const context: Record<string, string | number> = {};
+  interpreter.parse(script);
+  interpreter.interpret(context);
+  checkAndHandleContext(context);
+};
+```
 
 4. **Iterator**: Fournir un moyen de parcourir séquentiellement les collections de commandes de production ou les lots de matériaux. `(Landry)`
    - Use iterator pattern for collections.
@@ -392,7 +446,33 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
    - Implement a mediator to manage module interactions.
 
 6. **Memento**: Sauvegarder et restaurer les états précédents des configurations de processus ou des paramètres de machine. `(Mionja)`
-   - Use memento pattern for state management.
+```js
+async saveState(equipment: EquipmentMemento): Promise<void> {
+  const equipments = this.getEquipmentStates();
+  const newEquipment = { ...equipments, [equipment.id]: equipment };
+  Cookies.set("equipmentStates", JSON.stringify(newEquipment), {
+    expires: 1,
+  });
+}
+
+...
+
+await equipmentService.saveState(equipment);
+await instance.patch("/api/equipment/" + equipment.id, data);
+
+...
+
+const handleRestoreState = async () => {
+  const equipmentStates = equipmentService.getEquipmentStates();
+  if (equipmentId && equipmentStates[equipmentId]) {
+    const equipment = equipmentStates[equipmentId];
+    await instance.patch("/api/equipment/" + equipmentId, equipment);
+    equipmentService.removeEquipmentState(equipmentId);
+    onRestoreSuccess?.(equipmentId);
+  }
+};
+
+```
 
 7. **Observer**: Notifier les opérateurs ou les gestionnaires des changements dans le processus de production ou des alertes de maintenance. `(Mario)`
    - Implement observer pattern for event notifications.
@@ -492,4 +572,7 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Abstract Factory**: `src/app/common/factories/EquipmentFactory.ts`
 - **Adapter**: `src/common/interfaces/IMachine.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
 - **Template Method**: `src/common/bases/MachineBase.ts`, `src/common/adpters/ComplexMachineAdapter.ts`, `src/common/adpters/SimpleMachineAdapter.ts`
-
+- **Memento**: `src/common/services/EquipmentService.ts`, `scr/app/equipment/_components/RestoreButton`, `scr/app/equipment/_components/EquipmentForm`
+- **Bridge**: `src/app/api/equipment/[id]/clone/route.ts`, `src/common/Production/ProductionManager.ts`, `src/common/Production/FoodProductionProcess.ts`, `src/common/Production/CarProductionProcess.ts`
+- **Facade**: `src/common/facades/ProductionFacade.ts`
+- **Interpreter**: `src/lib/interpreter/machine-interpreter.ts`, `src/app/machine/page.tsx`
