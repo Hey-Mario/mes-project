@@ -251,7 +251,17 @@ class CarProductionProcess implements IProductionProcess {
    - Implement composite pattern for task management.
 
 4. **Decorator**: Ajouter dynamiquement des fonctionnalités supplémentaires aux processus, comme des notifications de statut ou des mesures de sécurité renforcées. `(Mionja)`
-   - Use decorators to extend process functionalities dynamically.
+```js
+export class StatusNotificationDecorator implements IProcess {
+  constructor(private process: IProcess) {}
+
+  execute() {
+    this.process.execute();
+    message.success("Notification sent");
+    console.log("Adding status notifications to the process");
+  }
+}
+```
 
 5. **Facade**: Simplifier les interactions complexes entre les différents modules du système de production. `(Mionja)`
 ```js
@@ -482,3 +492,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Memento**: `src/common/services/EquipmentService.ts`, `scr/app/equipment/_components/RestoreButton`, `scr/app/equipment/_components/EquipmentForm`
 - **Bridge**: `src/app/api/equipment/[id]/clone/route.ts`, `src/common/Production/ProductionManager.ts`, `src/common/Production/FoodProductionProcess.ts`, `src/common/Production/CarProductionProcess.ts`
 - **Facade**: `src/common/facades/ProductionFacade.ts`
+- **Decorator**: `src/common/decorators/StatusNotificationDecorator.ts`

@@ -1,4 +1,5 @@
 import { IProcess } from "../interfaces/IProcess";
+import { message } from "antd";
 
 export class BaseProcess implements IProcess {
   execute() {
@@ -11,6 +12,7 @@ export class StatusNotificationDecorator implements IProcess {
 
   execute() {
     this.process.execute();
+    message.success("Notification sent");
     console.log("Adding status notifications to the process");
   }
 }

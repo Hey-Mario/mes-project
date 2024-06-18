@@ -4,12 +4,18 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ProductionFacade } from "@/common/facades/ProductionFacade";
 import Center from "@/components/Center";
+import { BaseProcess, StatusNotificationDecorator } from "@/common/decorators/StatusNotificationDecorator";
 
 const ProductionProcessPage = () => {
   const productionFacade = new ProductionFacade();
 
+  // Decorators
+  const baseProcess = new BaseProcess();
+  const processWithNotification = new StatusNotificationDecorator(baseProcess);
+  
   const handleProcessOrderAndStock = () => {
     productionFacade.processOrderAndStock();
+    processWithNotification.execute();
   };
 
   return (
