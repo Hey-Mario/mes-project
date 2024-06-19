@@ -332,7 +332,25 @@ export class ProductionFacade {
 
 ### Behavioral Patterns
 1. **Chain of Responsibility**: Gérer les approbations de modifications de processus en les passant à travers une chaîne de responsables. `(Landry)`
-   - Implement a chain of responsibility for approval workflows.
+```js
+import { IApprovalHandler } from "../../interfaces/IApprovalHandler";
+
+export abstract class ApprovalHandler implements IApprovalHandler {
+  private nextHandler: IApprovalHandler | null = null;
+
+  public setNext(handler: IApprovalHandler): IApprovalHandler {
+    this.nextHandler = handler;
+    return handler;
+  }
+
+  public handle(request: any): any {
+    if (this.nextHandler) {
+      return this.nextHandler.handle(request);
+    }
+    return null;
+  }
+}
+```
 
 2. **Command**: Encapsuler les actions comme des objets, permettant des opérations complexes et planifiables sur la production. `(Mario)`
    
@@ -670,3 +688,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Interpreter**: `src/lib/interpreter/machine-interpreter.ts`, `src/app/machine/page.tsx`
 - **Observer**: `src/common/interfaces/notification/NotificationTypeEnum.ts`, `src/common/interfaces/notification/Subject.ts`, `src/common/interfaces/notification/Observer.ts`,`src/common/classes/production/Operator.ts`, `src/common/classes/production/ProductionProcess.ts`
 - **Strategy**: `src/common/contexts/QualityControlContext.ts`, `src/common/contexts/SchedulingContext.ts`
+- **Chain of Responsibility**: `src/common/classes/approval/ApprovalHandler.ts`, `src/common/classes/approval/DirectorApprovalHandler.ts`
