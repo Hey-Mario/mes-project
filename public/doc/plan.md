@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prismaClientSingleton = () => {
   return new PrismaClient()
-}
+}jus
 
 declare const globalThis: {
   prismaGlobal: ReturnType<typeof prismaClientSingleton>;
@@ -714,7 +714,52 @@ export class ComplexMachineAdapter extends MachineBase {
 ```
 
 11. **Visitor**: Appliquer des opérations de maintenance, d'inspection ou d'audit sur les équipements ou les processus sans les modifier. `(Landry)`
-    - Implement visitor pattern for operations on equipment.
+```js
+    export class Machine implements IVisitable {
+    constructor(public name: string, public status: string, public runtimeHours: number) {}
+
+    accept(visitor: IVisitor): void {
+        visitor.visitMachine(this);
+    }
+
+    performMaintenance(): void {
+        this.status = "Under Maintenance";
+        console.log(`Maintenance performed on ${this.name}. Status updated to ${this.status}.`);
+    }
+
+    replaceWornParts(): void {
+        console.log(`Worn parts replaced on ${this.name}.`);
+    }
+
+    resetRuntimeHours(): void {
+        this.runtimeHours = 0;
+        console.log(`Runtime hours reset for ${this.name}.`);
+    }
+}
+```
+```js
+    export class Equipment implements IVisitable {
+        constructor(public type: string, public condition: string, public usageCount: number) {}
+
+        accept(visitor: IVisitor): void {
+            visitor.visitEquipment(this);
+        }
+
+        inspect(): void {
+            console.log(`Inspection completed for ${this.type}.`);
+        }
+
+        updateCondition(newCondition: string): void {
+            this.condition = newCondition;
+            console.log(`Condition updated to ${this.condition} for ${this.type}.`);
+        }
+
+        recordInspection(): void {
+            console.log(`Inspection results recorded for ${this.type}.`);
+        }
+    }
+```
+
 
 ### Example Implementations
 - **Singleton**: `src/lib/prisma.ts`
@@ -735,3 +780,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Chain of Responsibility**: `src/common/classes/approval/ApprovalHandler.ts`, `src/common/classes/approval/DirectorApprovalHandler.ts`
 -**Iterator**: `src/common/classes/OrderIterator.ts`,
 -**State**: `src/common/states/MachineContext.ts`, `src/common/states/ActiveState.ts`, `src/common/states/StoppedState.ts`, `src/common/states/MaintenanceState.ts`	
+-**Visitor**: `src/common/classes/visitor/Machine.ts`, `src/common/classes/visitor/Equipment.ts`, `src/common/classes/visitor/MaintenanceVisitor.ts`, `src/app/maintenance/page.tsx`, `src/app/maintenance/test.ts`
