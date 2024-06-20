@@ -247,8 +247,51 @@ class CarProductionProcess implements IProductionProcess {
 }
 ```
 
-3. **Composite**: Organiser les composants de production ou les tâches en structures hiérarchiques. `(Mario)`
-   - Implement composite pattern for task management.
+3. **Composite**: Organiser les tâches en structures hiérarchiques. `(Mario)`
+```js
+import { TaskWithSubTasks } from "../interfaces/TaskWithSubTasks";
+
+export class TaskComposite implements ITaskComponent {
+  private subTasks: ITaskComponent[] = [];
+
+  constructor(private name: string, private description: string) {}
+
+  getName(): string {
+    return this.name;
+  }
+
+  getDescription(): string {
+    return this.description;
+  }
+
+  getSubTasks(): ITaskComponent[] {
+    return this.subTasks;
+  }
+
+  addSubTask(task: ITaskComponent): void {
+    this.subTasks.push(task);
+  }
+
+  removeSubTask(task: ITaskComponent): void {
+    const index = this.subTasks.indexOf(task);
+    if (index > -1) {
+      this.subTasks.splice(index, 1);
+    }
+  }
+}
+
+...
+
+export const convertToComposite = (task: TaskWithSubTasks): ITaskComponent => {
+  const taskComposite = new TaskComposite(task.name, task.description);
+  if (task.subTasks) {
+    task.subTasks.forEach((subTask) => {
+      taskComposite.addSubTask(convertToComposite(subTask));
+    });
+  }
+  return taskComposite;
+};
+```
 
 4. **Decorator**: Ajouter dynamiquement des fonctionnalités supplémentaires aux processus, comme des notifications de statut ou des mesures de sécurité renforcées. `(Mionja)`
 ```js
@@ -735,3 +778,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Chain of Responsibility**: `src/common/classes/approval/ApprovalHandler.ts`, `src/common/classes/approval/DirectorApprovalHandler.ts`
 -**Iterator**: `src/common/classes/OrderIterator.ts`,
 -**State**: `src/common/states/MachineContext.ts`, `src/common/states/ActiveState.ts`, `src/common/states/StoppedState.ts`, `src/common/states/MaintenanceState.ts`	
+-**Composite**: `src/common/composite/TaskComposite.ts`

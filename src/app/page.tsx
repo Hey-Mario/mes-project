@@ -8,6 +8,7 @@ export default function Home() {
       <Flex direction={"column"}>
         <Link href="/product">Product</Link>
         <Link href="/equipment">Equipment</Link>
+        <Link href="/task">Task</Link>
         <Link href="/machine">Machine</Link>
         <Link href="/production-process">Production Process</Link>
         <Link href="/quality-control">Quality Control</Link>
