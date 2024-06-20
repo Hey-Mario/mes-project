@@ -583,7 +583,16 @@ const handleProcessOrderAndStock = () => {
 ```
 
 8. **State**: Modifier le comportement des machines ou des processus en fonction de leur état, comme actif, en maintenance, ou en arrêt. `(Landry)`
-   - Use state pattern to manage machine states.
+```js
+    import { IMachineContext } from './types';
+
+        export abstract class MachineState {
+          abstract start(machineContext: IMachineContext): void;
+          abstract stop(machineContext: IMachineContext): void;
+          abstract performMaintenance(machineContext: IMachineContext): void;
+          abstract getStatus(): string;
+        }
+```
 
 9. **Strategy**: Permettre la modification des algorithmes de contrôle de qualité ou des logiques de planification. `(Mionja)`
 ```js
@@ -725,3 +734,4 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Strategy**: `src/common/contexts/QualityControlContext.ts`, `src/common/contexts/SchedulingContext.ts`
 - **Chain of Responsibility**: `src/common/classes/approval/ApprovalHandler.ts`, `src/common/classes/approval/DirectorApprovalHandler.ts`
 -**Iterator**: `src/common/classes/OrderIterator.ts`,
+-**State**: `src/common/states/MachineContext.ts`, `src/common/states/ActiveState.ts`, `src/common/states/StoppedState.ts`, `src/common/states/MaintenanceState.ts`	

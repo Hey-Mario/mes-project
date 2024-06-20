@@ -12,6 +12,7 @@ export default function Home() {
         <Link href="/production-process">Production Process</Link>
         <Link href="/quality-control">Quality Control</Link>
         <Link href="/approval">Approval</Link>
+        <Link href="/machine/state">Machine State</Link>
       </Flex>
     </>
   );
