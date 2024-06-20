@@ -824,3 +824,4 @@ export class ComplexMachineAdapter extends MachineBase {
 -**Iterator**: `src/common/classes/OrderIterator.ts`,
 -**State**: `src/common/states/MachineContext.ts`, `src/common/states/ActiveState.ts`, `src/common/states/StoppedState.ts`, `src/common/states/MaintenanceState.ts`	
 -**Visitor**: `src/common/classes/visitor/Machine.ts`, `src/common/classes/visitor/Equipment.ts`, `src/common/classes/visitor/MaintenanceVisitor.ts`, `src/app/maintenance/page.tsx`, `src/app/maintenance/test.ts`
+-**Composite**: `src/common/composite/TaskComposite.ts`
