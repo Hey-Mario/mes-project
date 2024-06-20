@@ -9,6 +9,7 @@ import { SchedulingStrategyFirst } from "@/common/strategies/SchedulingStrategyF
 import { SchedulingStrategySecond } from "@/common/strategies/SchedulingStrategySecond";
 import Center from "@/components/Center";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@radix-ui/themes";
 
 const QualityControlPage = () => {
   const [qualityControlContext, setQualityControlContext] = useState(
@@ -47,23 +48,31 @@ const QualityControlPage = () => {
   };
 
   return (
-    <Center>
-      <h1>Quality Control Strategy</h1>
-      <p>(Look at the console for information regarding the strategy)</p>
-      <Button onClick={switchQualityControlStrategy}>
-        Switch Quality Control Strategy
-      </Button>
-      <p>
-        Current Quality Control Strategy:{" "}
-        {currentQualityControlStrategy.constructor.name}
-      </p>
-      <Button onClick={switchSchedulingStrategy}>
-        Switch Scheduling Strategy
-      </Button>
-      <p>
-        Current Scheduling Strategy:{" "}
-        {currentSchedulingStrategy.constructor.name}
-      </p>
+    <Center className="h-full flex flex-col justify-evenly">
+      <div className="flex flex-col gap-5">
+        <Heading size="5">Quality Control Strategy</Heading>
+        <div className="flex gap-3 justify-center w-full">
+          <Button onClick={switchQualityControlStrategy}>
+            Switch Quality Control Strategy
+          </Button>
+          <Button onClick={switchSchedulingStrategy}>
+            Switch Scheduling Strategy
+          </Button>
+        </div>
+        <p>(Look at the console for information regarding the strategy)</p>
+      </div>
+      <div className="flex gap-3 justify-center">
+        <p>
+          Current Quality Control Strategy:{" "}
+          {currentQualityControlStrategy.constructor.name}
+        </p>
+
+        <p>
+          Current Scheduling Strategy:{" "}
+          {currentSchedulingStrategy.constructor.name}
+        </p>
+      </div>
+
     </Center>
   );
 };
