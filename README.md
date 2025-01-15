@@ -1,9 +1,13 @@
-# Membres du groupe
+# Group Members
 - RANDRIAMANANTENA Lovamanitra Mario
 - RANAIVOARISON Mionja
 - RANDRIANANAHARY LanjaTina 
 
+# Design Pattern List
+You can find the details of all the Design Patterns at https://github.com/Hey-Mario/mes-project/blob/main/public/doc/plan.md
+
 # Manufacturing Execution System Project
+
 ### Environment Variables
 
 To run this project, you will need to add the following environment variables to your `.env` file.
@@ -63,6 +67,3 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ```
 
 Open [http://localhost:5555](http://localhost:5555) with your browser to see the result.
-
-## Design Pattern List
-You can find the details of all the Design Patterns at https://github.com/Hey-Mario/mes-project/blob/main/public/doc/plan.md
