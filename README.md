@@ -1,3 +1,8 @@
+# Membres du groupe
+- RANDRIAMANANTENA Lovamanitra Mario
+- RANAIVOARISON Mionja
+- RANDRIANANAHARY LanjaTina 
+
 # Manufacturing Execution System Project
 ### Environment Variables
 
