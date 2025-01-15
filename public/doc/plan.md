@@ -347,7 +347,6 @@ export class ProductionFacade {
    ```
 
 7. **Proxy**: Contrôler l'accès aux informations critiques de la production ou aux commandes d'opération des machines. `(Landry)`
-   - Use proxy pattern to manage access control.
    ```typescript
    class SecureDataProxy {
        constructor(private realData: SensitiveData) {}
@@ -821,7 +820,7 @@ export class ComplexMachineAdapter extends MachineBase {
 - **Observer**: `src/common/interfaces/notification/NotificationTypeEnum.ts`, `src/common/interfaces/notification/Subject.ts`, `src/common/interfaces/notification/Observer.ts`,`src/common/classes/production/Operator.ts`, `src/common/classes/production/ProductionProcess.ts`
 - **Strategy**: `src/common/contexts/QualityControlContext.ts`, `src/common/contexts/SchedulingContext.ts`
 - **Chain of Responsibility**: `src/common/classes/approval/ApprovalHandler.ts`, `src/common/classes/approval/DirectorApprovalHandler.ts`
--**Iterator**: `src/common/classes/OrderIterator.ts`,
--**State**: `src/common/states/MachineContext.ts`, `src/common/states/ActiveState.ts`, `src/common/states/StoppedState.ts`, `src/common/states/MaintenanceState.ts`	
--**Visitor**: `src/common/classes/visitor/Machine.ts`, `src/common/classes/visitor/Equipment.ts`, `src/common/classes/visitor/MaintenanceVisitor.ts`, `src/app/maintenance/page.tsx`, `src/app/maintenance/test.ts`
--**Composite**: `src/common/composite/TaskComposite.ts`
+- **Iterator**: `src/common/classes/OrderIterator.ts`,
+- **State**: `src/common/states/MachineContext.ts`, `src/common/states/ActiveState.ts`, `src/common/states/StoppedState.ts`, `src/common/states/MaintenanceState.ts`	
+- **Visitor**: `src/common/classes/visitor/Machine.ts`, `src/common/classes/visitor/Equipment.ts`, `src/common/classes/visitor/MaintenanceVisitor.ts`, `src/app/maintenance/page.tsx`, `src/app/maintenance/test.ts`
+- **Composite**: `src/common/composite/TaskComposite.ts`
